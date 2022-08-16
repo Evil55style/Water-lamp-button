@@ -1,0 +1,104 @@
+<!-- 
+        1·块区域注释 Alt+shift+A 
+        2·w200p+tab键补全 是宽度设定快捷方式
+        3·width: calc(100% - 4px);/* 父元素的宽高-4px */
+        4·结束改颜色 改图层顺序 去掉outline
+
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background: #000;
+        }
+        .button {
+            width: 200px;
+            height: 100px;
+            color: #0ebeff;
+            font-size: 24px;
+            background: #000;
+            text-align: center;
+            border: none;
+            outline: none;
+            z-index: 1;
+            border-radius:10px;
+            /* 最后去掉outlin 此处是外边框*/
+            /* outline: 4px solid #fff; */
+            position: relative;/* 相对定位 --流水灯用绝对定位 */
+            overflow: hidden;/* 溢出部分隐藏 */
+        }
+        /* 流水灯带边框实际是个伪元素 */
+        .button::before {
+            content: "";
+            position:absolute;/* 绝对定位 */
+            background: #f40;/* 此处颜色决定转动的边框是什么颜色 */
+            /* 看不见是因为没有宽高 */
+            width: 200%;
+            height: 200%;
+            /* 调整前后顺序，目前把文字遮挡住了 */
+            z-index: -2;/* 值为负 越低越底层 */
+            /* 设置位置坐标 */
+            left: 50%;
+            top: 50%;/* 左上角处于正中心 */
+            transform-origin: 0 0;/* 变形原点 */
+            animation: rotate 15s infinite linear ;/* 把下面的动画应用到伪元素上 */  
+        }
+        /* 第二个伪元素 */
+        .button::after {
+            content: "";
+            position: absolute;/* 绝对定位 */
+            background: #000;
+            width: calc(100% - 4px);/* 父元素的宽高-4px */
+            height: calc(100% - 4px);
+            /* 坐标 */
+            left:2px;
+            top: 2px;
+            border-radius: 10px;/* 跟父元素这个幅度保持一致 */
+            z-index: -1;
+        }
+        /* 流水灯带动画 */
+        @keyframes rotate {
+            to {
+                transform:rotate(1turn);/* 旋转一圈 */
+            }
+        }
+
+
+
+    </style>
+    <script>
+        // 未能实现，当打开新的标签页时 动画暂停
+        /* 监听事件 页面可见性发生变化的时候发生变化 */
+        document.addEventListener('visibilitychange',
+        function(){
+            // 判断属性的值到底是个什么状态来让动画暂停或运动
+            if(document.visibilityState === 'hidden'){
+                stop(); /* 表示页面已经隐藏 */
+            }
+            else{
+                start();
+            }
+            // console.log(document.visibilityState);/* 输出值：hidden or visible */
+        });
+
+        function stop() {
+            animationPlayStyle = "paused"          
+        }
+        function start() {
+            animationPlayStyle = "running"
+        }
+    </script>
+</head>
+<body>
+    <!-- 边框按钮 -->
+    <p class="button">边框按钮</p>
+    
+</body>
+</html>
